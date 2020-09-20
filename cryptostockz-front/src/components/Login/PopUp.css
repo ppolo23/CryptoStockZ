@@ -1,0 +1,30 @@
+.popup {  
+  position: fixed;
+  width: 50%;  
+  height: auto;
+  top: 15%;  
+  left: 15%;  
+  right: 15%;  
+  bottom: auto;
+  margin: auto;
+  padding: 1%;
+  color: white;
+  background-color: rgba(75, 75, 75);
+  z-index: 1;
+  }  
+  
+.popup\_inner {  
+  position: absolute;  
+  left: 25%;
+  right: 25%;  
+  top: 25%;  
+  bottom: 25%;  
+  margin: auto;  
+  border-radius: 20px;  
+  background: white;
+  z-index: 1;
+}
+
+.error {
+  color: red;
+}
