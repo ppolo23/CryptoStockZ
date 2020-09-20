@@ -1,0 +1,600 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: "CryptostockZ"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:10010"
+basePath: "/"
+tags:
+- name: "base product"
+  description: "Everything about base products"
+- name: "product"
+  description: "Everything about the products"
+- name: "account"
+  description: "Operations about accounts"
+schemes:
+- "https"
+- "http"
+paths:
+  #Operaciones sobre productos
+  /product:
+    post:
+      x-swagger-router-controller: "product.controller"
+      tags:
+      - "product"
+      summary: "Add a new product to the store"
+      description: ""
+      operationId: "createProduct"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Product object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Product"
+      responses:
+        "405":
+          description: "Invalid input"
+    put:
+      x-swagger-router-controller: "product.controller"
+      tags:
+      - "product"
+      summary: "Update an existing product"
+      description: ""
+      operationId: "updateProduct"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Product object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Product"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Product not found"
+        "405":
+          description: "Validation exception"
+  /product/{productId}:
+    get:
+      x-swagger-router-controller: "product.controller"
+      tags:
+      - "product"
+      summary: "Find product by ID"
+      description: "Returns a single product"
+      operationId: "getProductById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "ID of product to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Product"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Product not found"
+    put:
+      x-swagger-router-controller: "product.controller"
+      tags:
+      - "product"
+      summary: "Updates a product with form data"
+      description: ""
+      operationId: "updateProductWithForm"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "ID of product that needs to be updated"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "address"
+        in: "formData"
+        description: "Updated address of the product"
+        required: false
+        type: "string"
+      - name: "owner_address"
+        in: "formData"
+        description: "Updated owner_address of the product"
+        required: false
+        type: "string"
+      responses:
+        "405":
+          description: "Invalid input"
+    delete:
+      x-swagger-router-controller: "product.controller"
+      tags:
+      - "product"
+      summary: "Deletes a product"
+      description: ""
+      operationId: "deleteProduct"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "api_key"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "productId"
+        in: "path"
+        description: "Product id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Product not found"
+  /product/search:
+    get:
+      x-swagger-router-controller: "product.controller"
+      tags:
+      - "product"
+      summary: "Find product by ID"
+      description: "Returns a single product"
+      operationId: "searchProduct"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "productName"
+        in: "query"
+        description: "Name of product to return"
+        required: false
+        type: "string"
+      - name: "manufacturerId"
+        in: "query"
+        description: "Name of manufacturer to return"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Product"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Product not found"
+  /product/{productId}/uploadImage:
+    post:
+      x-swagger-router-controller: "product.controller"
+      tags:
+      - "product"
+      summary: "uploads an image"
+      description: ""
+      operationId: "uploadFile"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "ID of product to update"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "additionalMetadata"
+        in: "formData"
+        description: "Additional data to pass to server"
+        required: false
+        type: "string"
+      - name: "file"
+        in: "formData"
+        description: "file to upload"
+        required: false
+        type: "file"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+
+  #Operaciones sobre cuentas
+  ## auth.controller.js
+  /account/signup:
+    post:
+      x-swagger-router-controller: "auth.controller"
+      tags:
+      - "account"
+      summary: "Create user"
+      description: "This can be done by any new user."
+      operationId: "signup"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        default:
+          description: "successful operation"
+  ## auth.controller.js
+  /account/signin:
+    get:
+      x-swagger-router-controller: "auth.controller"
+      tags:
+      - "account"
+      summary: "Logs user into the system"
+      description: ""
+      operationId: "signin"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name for login"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login in clear text"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "string"
+          headers:
+            X-Rate-Limit:
+              type: "integer"
+              format: "int32"
+              description: "calls per hour allowed by the user"
+            X-Expires-After:
+              type: "string"
+              format: "date-time"
+              description: "date in UTC when token expires"
+        "400":
+          description: "Invalid username/password supplied"
+  ## auth.controller.js
+  /account/signgout:
+    get:
+      x-swagger-router-controller: "auth.controller"
+      tags:
+      - "account"
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: "signout"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+  ## account.controller.js
+  /account/{username}:
+    get:
+      x-swagger-router-controller: "account.controller"
+      tags:
+      - "account"
+      summary: "Get user by user name"
+      description: ""
+      operationId: "getUserByName"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The name that needs to be fetched. Use user1 for testing. "
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "User not found"
+    put:
+      x-swagger-router-controller: "account.controller"
+      tags:
+      - "account"
+      summary: "Updated user"
+      description: "This can only be done by the logged in user."
+      operationId: "updateUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "name that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "400":
+          description: "Invalid user supplied"
+        "404":
+          description: "User not found"
+    delete:
+      x-swagger-router-controller: "account.controller"
+      tags:
+      - "account"
+      summary: "Delete user"
+      description: "This can only be done by the logged in user."
+      operationId: "deleteUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The name that needs to be deleted"
+        required: true
+        type: "string"
+      responses:
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "User not found"
+  /account/products/all:
+    get:
+      x-swagger-router-controller: "account.controller"
+      tags:
+      - "account"
+      summary: "Finds user owned Products"
+      description: ""
+      operationId: "getUserProducts"
+      produces:
+      - "application/xml"
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Product"
+        "400":
+          description: "Invalid status value"
+  /account/products/wish:
+    get:
+      x-swagger-router-controller: "account.controller"
+      tags:
+      - "account"
+      summary: "Finds user wishlist Products"
+      description: ""
+      operationId: "getUserWishProducts"
+      produces:
+      - "application/xml"
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Product"
+        "400":
+          description: "Invalid status value"
+  /manufacturers:
+    get:
+      x-swagger-router-controller: "account.controller"
+      tags:
+      - "account"
+      summary: "Finds all manufacturers"
+      description: ""
+      operationId: "getManufacturers"
+      produces:
+      - "application/xml"
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Product"
+        "400":
+          description: "Invalid status value"
+
+  #Operaciones sobre productos base
+  /base/product:
+    post:
+      x-swagger-router-controller: "base_product.controller"
+      tags:
+      - "base product"
+      summary: "Create a base product"
+      description: "This can be only done by manufacturers"
+      operationId: "createBaseProduct"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created base product object"
+        required: true
+        schema:
+          $ref: "#/definitions/BaseProduct"
+      responses:
+        "200": 
+          description: "successful operation"
+  /base/product/{sku}:
+    put:
+      x-swagger-router-controller: "base_product.controller"
+      tags:
+      - "base product"
+      summary: "Update an existing product"
+      description: ""
+      operationId: "updateBaseProduct"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "sku"
+        in: "path"
+        description: "The sku of the base product to update"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Base Product object that needs to be added"
+        required: true
+        schema:
+          $ref: "#/definitions/BaseProduct"
+      responses:
+        "200": 
+          description: "successful operation"
+        "400":
+          description: "Invalid sku supplied"
+        "404":
+          description: "Base Product not found"
+  /base/products:
+    get:
+      x-swagger-router-controller: "base_product.controller"
+      tags:
+      - "account"
+      summary: "Finds all Base Products"
+      description: ""
+      operationId: "getBaseProducts"
+      produces:
+      - "application/xml"
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Product"
+        "400":
+          description: "Invalid status value"
+
+definitions:
+  User:
+    type: "object"
+    required:
+    - "username"
+    - "email"
+    - "password"
+    properties:
+      username:
+        type: "string"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      role:
+        type: "integer"
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+      purchases:
+        type: "number"
+      sales:
+        type: "number"
+      level:
+        type: "integer"
+      permisions:
+        type: "integer"
+        enum:
+          - 1
+          - 2
+      metamaskAccount:
+        type: "string"
+    xml:
+      name: "User"
+  Product:
+    type: "object"
+    properties:
+      address:
+        type: "string"
+      base_product_id:
+        type: "integer"
+      unique_identificator:
+        type: "string"
+      manufact_id:
+        type: "string"
+      owner_address:
+        type: "string"
+      level:
+        type: "integer"
+    xml:
+      name: "Product"
+  BaseProduct:
+    type: "object"
+    # Deberiamos tener un sku_empresa y ean_empresa además de los nuestros?
+    # Es posible que dos empresas coincidan en estos códigos?
+    properties:
+      name:
+        type: "string"
+      ean: #13 digitos
+        type: "integer"
+      sku: #alfanumérico, de 8 a 12
+        type: "string"
+      manufact_id:
+        type: "string"
+      verified: #si es original o no
+        type: "boolean"
+      ilustration:
+        type: "string"
+      img:
+        type: "string" #CONVERTIR A IMG
+    xml:
+        name: "BaseProduct"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
