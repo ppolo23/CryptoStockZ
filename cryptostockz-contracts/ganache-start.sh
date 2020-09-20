@@ -1,0 +1,1 @@
+ganache-cli --accounts 10 --defaultBalanceEther 100 --deterministic cryptostockz --port 8545 --allowUnlimitedContractSize
